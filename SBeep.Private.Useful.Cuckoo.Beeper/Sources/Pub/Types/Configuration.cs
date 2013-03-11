@@ -1,15 +1,18 @@
 ﻿// Sergey Kirichenkov [kirichenkov.sa@gmail.com]
-// 2012.08.09 11:43
+// 2013.03.11 10:26
 
 using System;
 using System.Xml.Serialization;
 
 namespace SBeep.Private.Useful.Cuckoo.Beeper.Pub.Types
 {
-    [Serializable]
+    [ Serializable ]
     public class Configuration
     {
-        [ XmlAttribute( "workSeconds" ) ] public double WorkSeconds { get; set; }
-        [ XmlAttribute( "restSeconds" ) ] public double RestSeconds { get; set; }
+        [ XmlAttribute( "workPeriod" ) ] public string WorkSeconds1 { get; set; }
+        [ XmlAttribute( "restPeriod" ) ] public string RestSeconds1 { get; set; }
+
+        public TimeSpan WorkSeconds { get; set; }
+        public TimeSpan RestSeconds { get; set; }
     }
 }
