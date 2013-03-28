@@ -11,7 +11,7 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.App
         {
             try {
                 var b = new Imp.Workers.Beeper();
-                b.Do();
+                b.Go();
             }
             catch( Exception e ) {
                 Console.WriteLine( e );
