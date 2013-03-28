@@ -1,5 +1,5 @@
 ﻿// Sergey Kirichenkov [kirichenkov.sa@gmail.com]
-// 2013.03.11 10:18
+// 2013.03.28 14:26
 
 using System;
 using System.Threading;
@@ -20,25 +20,40 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Workers
 
         private static Configuration _configuration;
 
+        private const string Path = "configuration.config";
+
         //===============================================================================================[]
         #endregion
 
 
 
 
-        public void Do()
+        #region Pub
+        //===============================================================================================[]
+        public void Go()
         {
+            Console.Clear();
+
             _start = DateTime.Now;
-            var path = "configuration.config";
-            _configuration = FileWizard.OpenXml<Configuration>( path );
+            _configuration = FileWizard.OpenXml<Configuration>( Path );
             _configuration.WorkSeconds = TimeSpan.Parse( _configuration.WorkSeconds1 );
             _configuration.RestSeconds = TimeSpan.Parse( _configuration.RestSeconds1 );
 
             _timer = new Timer( GoToRest, "", TimeSpan.FromTicks( 0 ), TimeSpan.FromMinutes( 1 ) );
             Console.WriteLine( "Start" );
+
             Console.ReadLine();
+            Go();
         }
 
+        //===============================================================================================[]
+        #endregion
+
+
+
+
+        #region Routines
+        //===============================================================================================[]
         private static void Beep( object obj )
         {
             _start = DateTime.Now;
@@ -66,5 +81,8 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Workers
 
             _timerRest = new Timer( Beep, "Работай", _configuration.RestSeconds, TimeSpan.FromTicks( 0 ) );
         }
+
+        //===============================================================================================[]
+        #endregion
     }
 }
