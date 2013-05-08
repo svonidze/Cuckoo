@@ -47,6 +47,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sources\Imp\Stuff\Help\ConfigurationSerializer.cs" />
     <Compile Include="Sources\Imp\Stuff\Help\FileWizard.cs" />
+    <Compile Include="Sources\Imp\Types\BeeperRequirements.cs" />
     <Compile Include="Sources\Imp\Workers\Beeper.cs" />
     <Compile Include="Sources\Imp\Stuff\Timers\CountingManualTimer.cs" />
     <Compile Include="Sources\Imp\Stuff\Timers\ManualTimer.cs" />
@@ -59,6 +60,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SBeep.Private.Useful.Cuckoo.Beeper.Common\SBeep.Private.Useful.Cuckoo.Beeper.Common.csproj">
+      <Project>{9FD6212D-D8CC-4084-A729-725D7F72C865}</Project>
+      <Name>SBeep.Private.Useful.Cuckoo.Beeper.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SBeep.Private.Useful.Cuckoo.Common\SBeep.Private.Useful.Cuckoo.Common.csproj">
       <Project>{c10ecfc8-14d1-4c9e-a9cd-9b4887eca751}</Project>
       <Name>SBeep.Private.Useful.Cuckoo.Common</Name>

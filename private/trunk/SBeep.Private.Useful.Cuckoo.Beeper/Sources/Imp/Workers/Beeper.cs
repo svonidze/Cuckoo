@@ -1,26 +1,39 @@
 ﻿// Sergey Kirichenkov [kirichenkov.sa@gmail.com]
-// 2013.05.08 23:34
+// 2013.05.09 0:07
 
 using System;
 using System.Threading.Tasks;
 
-using SBeep.Private.Useful.Cuckoo.Beeper.Imp.Stuff.Help;
-using SBeep.Private.Useful.Cuckoo.Beeper.Imp.Stuff.Timers;
-using SBeep.Private.Useful.Cuckoo.Beeper.Pub.Types;
+using SBeep.Private.Useful.Cuckoo.Beeper.Common.Pub.Requirements;
 using SBeep.Private.Useful.Cuckoo.Common.Pub.Interfaces.Timers;
 
 namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Workers
 {
     internal class Beeper
     {
+        public Beeper(
+            IBeeperRequirements requirements,
+            ICountingManualTimer workTimer,
+            ICountingManualTimer restTimer )
+        {
+            _requirements = requirements;
+            _workTimer = workTimer;
+            _restTimer = restTimer;
+
+            _workTimer.SetCallback( CallBackWork );
+            _restTimer.SetCallback( CallBackRest );
+        }
+
+
+
+
         #region Data
         //===============================================================================================[]
-        private static ICountingManualTimer _workTimer;
-        private static ICountingManualTimer _restTimer;
+        private readonly IBeeperRequirements _requirements;
 
-        private static Configuration Configuration { get; set; }
+        private readonly ICountingManualTimer _workTimer;
+        private readonly ICountingManualTimer _restTimer;
 
-        private const string Path = "configuration.config";
         //===============================================================================================[]
         #endregion
 
@@ -33,14 +46,10 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Workers
         {
             Console.Clear();
 
-            ReadConfig();
-            _workTimer = new CountingManualTimer( CallBackWork );
-            _restTimer = new CountingManualTimer( CallBackRest );
-
             SetCounting( _restTimer, "Rest" );
             SetCounting( _workTimer, "Work" );
 
-            _workTimer.Start( Configuration.WorkTime );
+            _workTimer.Start( _requirements.WorkTime );
 
             Console.ReadLine();
 
@@ -48,14 +57,6 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Workers
             _restTimer.Pause();
 
             Go();
-        }
-
-        //-------------------------------------------------------------------------------------[]
-        private static void ReadConfig()
-        {
-            if( Configuration != null )
-                return;
-            Configuration = FileWizard.OpenXml<Configuration>( Path );
         }
 
         //===============================================================================================[]
@@ -77,7 +78,8 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Workers
                 return;
             }
             var remainingTime = operationTime - ( DateTime.Now - startTime );
-            Console.WriteLine( "Time left {1} until the end of '{0}'", actionName, remainingTime.Value.ToString( @"dd\.hh\:mm\:ss" ) );
+            Console.WriteLine(
+                "Time left {1} until the end of '{0}'", actionName, remainingTime.Value.ToString( @"dd\.hh\:mm\:ss" ) );
         }
 
         //-------------------------------------------------------------------------------------[]
@@ -86,7 +88,7 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Workers
             string actionName )
         {
             timer.SetCounting(
-                TimeSpan.FromSeconds( 1 ), () => Counting( actionName, timer.StartTime, timer.NextCallBackTime ) );
+                TimeSpan.FromSeconds( 1 ), x => Counting( actionName, timer.StartTime, timer.NextCallBackTime ) );
         }
 
         //-------------------------------------------------------------------------------------[]
@@ -108,7 +110,7 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Workers
         {
             Console.WriteLine( "CallBackRest" );
             _restTimer.Pause();
-            _workTimer.Start( Configuration.WorkTime );
+            _workTimer.Start( _requirements.WorkTime );
 
             Parallel.Invoke( Beep );
         }
@@ -118,7 +120,7 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Workers
         {
             Console.WriteLine( "CallBackWork" );
             _workTimer.Pause();
-            _restTimer.Start( Configuration.RestTime );
+            _restTimer.Start( _requirements.RestTime );
 
             Parallel.Invoke( Beep );
         }
