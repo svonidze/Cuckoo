@@ -48,6 +48,8 @@
     <Compile Include="Sources\Imp\Stuff\Help\ConfigurationSerializer.cs" />
     <Compile Include="Sources\Imp\Stuff\Help\FileWizard.cs" />
     <Compile Include="Sources\Imp\Workers\Beeper.cs" />
+    <Compile Include="Sources\Imp\Stuff\Timers\CountingManualTimer.cs" />
+    <Compile Include="Sources\Imp\Stuff\Timers\ManualTimer.cs" />
     <Compile Include="Sources\Pub\Types\Configuration.cs" />
   </ItemGroup>
   <ItemGroup>
