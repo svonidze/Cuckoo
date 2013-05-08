@@ -12,7 +12,7 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Pub.Types
         [ XmlAttribute( "workPeriod" ) ] public string WorkSeconds1 { get; set; }
         [ XmlAttribute( "restPeriod" ) ] public string RestSeconds1 { get; set; }
 
-        public TimeSpan WorkSeconds { get; set; }
-        public TimeSpan RestSeconds { get; set; }
+        public TimeSpan WorkTime { get; set; }
+        public TimeSpan RestTime { get; set; }
     }
 }

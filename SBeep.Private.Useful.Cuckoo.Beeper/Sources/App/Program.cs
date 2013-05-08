@@ -10,8 +10,8 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.App
         private static void Main( string[] args )
         {
             try {
-                var b = new Imp.Workers.Beeper();
-                b.Go();
+                var beeper = new Imp.Workers.Beeper();
+                beeper.Go();
             }
             catch( Exception e ) {
                 Console.WriteLine( e );

@@ -1,10 +1,11 @@
 ﻿// Sergey Kirichenkov [kirichenkov.sa@gmail.com]
-// 2013.03.28 14:26
+// 2013.05.08 17:22
 
 using System;
-using System.Threading;
+using System.Threading.Tasks;
 
 using SBeep.Private.Useful.Cuckoo.Beeper.Imp.Stuff.Help;
+using SBeep.Private.Useful.Cuckoo.Beeper.Imp.Stuff.Timers;
 using SBeep.Private.Useful.Cuckoo.Beeper.Pub.Types;
 
 namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Workers
@@ -13,15 +14,12 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Workers
     {
         #region Data
         //===============================================================================================[]
-        private static Timer _timer;
-        private static Timer _timerRest;
+        private static CountingManualTimer _workTimer;
+        private static CountingManualTimer _restTimer;
 
-        private static DateTime _start;
-
-        private static Configuration _configuration;
+        private static Configuration Configuration { get; set; }
 
         private const string Path = "configuration.config";
-
         //===============================================================================================[]
         #endregion
 
@@ -34,16 +32,26 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Workers
         {
             Console.Clear();
 
-            _start = DateTime.Now;
-            _configuration = FileWizard.OpenXml<Configuration>( Path );
-            _configuration.WorkSeconds = TimeSpan.Parse( _configuration.WorkSeconds1 );
-            _configuration.RestSeconds = TimeSpan.Parse( _configuration.RestSeconds1 );
+            ReadConfig();
+            _workTimer = new CountingManualTimer( CallBackWork );
+            _restTimer = new CountingManualTimer( CallBackRest );
 
-            _timer = new Timer( GoToRest, "", TimeSpan.FromTicks( 0 ), TimeSpan.FromMinutes( 1 ) );
-            Console.WriteLine( "Start" );
+            SetCounting( _restTimer, "Rest" );
+            SetCounting( _workTimer, "Work" );
+
+            _workTimer.Start( Configuration.WorkTime );
 
             Console.ReadLine();
             Go();
+        }
+
+        private static void ReadConfig()
+        {
+            if( Configuration != null )
+                return;
+            Configuration = FileWizard.OpenXml<Configuration>( Path );
+            Configuration.WorkTime = TimeSpan.Parse( Configuration.WorkSeconds1 );
+            Configuration.RestTime = TimeSpan.Parse( Configuration.RestSeconds1 );
         }
 
         //===============================================================================================[]
@@ -54,32 +62,61 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Workers
 
         #region Routines
         //===============================================================================================[]
-        private static void Beep( object obj )
+        private static void Counting(
+            string message,
+            DateTime? startTime,
+            TimeSpan operationTime )
         {
-            _start = DateTime.Now;
+            Console.Clear();
+            if( startTime.HasValue == false ) {
+                Console.WriteLine( "startTime is null" );
+                return;
+            }
+            var remainingTime = operationTime - ( DateTime.Now - startTime );
+            Console.WriteLine( "Time left {1} before {0}", message, remainingTime.Value.ToString( @"dd\.hh\:mm\:ss" ) );
+        }
 
-            if( obj != null )
-                Console.WriteLine( obj );
+        //-------------------------------------------------------------------------------------[]
+        private static void SetCounting(
+            CountingManualTimer timer,
+            string actionName )
+        {
+            timer.SetCounting(
+                TimeSpan.FromSeconds( 1 ), () => Counting( actionName, timer.StartTime, timer.NextCallBackTime ) );
+        }
 
+        //-------------------------------------------------------------------------------------[]
+        private static void Beep()
+        {
             for( var i = 1; i < 5; i++ )
                 Console.Beep( i*300, 1000 );
         }
 
-        private static void GoToRest( object obj )
+        //===============================================================================================[]
+        #endregion
+
+
+
+
+        #region Callbacks
+        //===============================================================================================[]
+        private void CallBackRest( object state )
         {
-            var remainder = ( DateTime.Now - _start - _configuration.WorkSeconds ).TotalMinutes;
-            if( remainder < 0 ) {
-                var b = ( Int32 ) Math.Abs( remainder );
-                Console.WriteLine( b );
-                return;
-            }
+            Console.WriteLine( "CallBackRest" );
+            _restTimer.Pause();
+            _workTimer.Start( Configuration.WorkTime );
 
-            Console.Clear();
+            Parallel.Invoke( Beep );
+        }
 
-            Beep( "Отдохни" );
-            Console.WriteLine( "Перерыв до {0}", _start + _configuration.RestSeconds );
+        //-------------------------------------------------------------------------------------[]
+        private void CallBackWork( object state )
+        {
+            Console.WriteLine( "CallBackWork" );
+            _workTimer.Pause();
+            _restTimer.Start( Configuration.RestTime );
 
-            _timerRest = new Timer( Beep, "Работай", _configuration.RestSeconds, TimeSpan.FromTicks( 0 ) );
+            Parallel.Invoke( Beep );
         }
 
         //===============================================================================================[]
