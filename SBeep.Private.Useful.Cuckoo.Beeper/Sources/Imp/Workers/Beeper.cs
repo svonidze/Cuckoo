@@ -45,13 +45,12 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Workers
             Go();
         }
 
+        //-------------------------------------------------------------------------------------[]
         private static void ReadConfig()
         {
             if( Configuration != null )
                 return;
             Configuration = FileWizard.OpenXml<Configuration>( Path );
-            Configuration.WorkTime = TimeSpan.Parse( Configuration.WorkSeconds1 );
-            Configuration.RestTime = TimeSpan.Parse( Configuration.RestSeconds1 );
         }
 
         //===============================================================================================[]
