@@ -1,5 +1,5 @@
 ﻿// Sergey Kirichenkov [kirichenkov.sa@gmail.com]
-// 2013.05.08 17:22
+// 2013.05.08 23:34
 
 using System;
 using System.Threading.Tasks;
@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using SBeep.Private.Useful.Cuckoo.Beeper.Imp.Stuff.Help;
 using SBeep.Private.Useful.Cuckoo.Beeper.Imp.Stuff.Timers;
 using SBeep.Private.Useful.Cuckoo.Beeper.Pub.Types;
+using SBeep.Private.Useful.Cuckoo.Common.Pub.Interfaces.Timers;
 
 namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Workers
 {
@@ -14,8 +15,8 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Workers
     {
         #region Data
         //===============================================================================================[]
-        private static CountingManualTimer _workTimer;
-        private static CountingManualTimer _restTimer;
+        private static ICountingManualTimer _workTimer;
+        private static ICountingManualTimer _restTimer;
 
         private static Configuration Configuration { get; set; }
 
@@ -77,7 +78,7 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Workers
 
         //-------------------------------------------------------------------------------------[]
         private static void SetCounting(
-            CountingManualTimer timer,
+            ICountingManualTimer timer,
             string actionName )
         {
             timer.SetCounting(

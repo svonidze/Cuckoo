@@ -1,12 +1,14 @@
 ﻿// Sergey Kirichenkov [kirichenkov.sa@gmail.com]
-// 2013.05.08 17:10
+// 2013.05.08 23:27
 
 using System;
 using System.Threading;
 
+using SBeep.Private.Useful.Cuckoo.Common.Pub.Interfaces.Timers;
+
 namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Stuff.Timers
 {
-    internal class ManualTimer
+    internal class ManualTimer : IManualTimer
     {
         public ManualTimer( Action<object> callBack )
         {
@@ -31,24 +33,17 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Stuff.Timers
 
 
 
-        #region Pub data
+        #region Implementation of IManualTimer
         //===============================================================================================[]
         public TimeSpan NextCallBackTime { get; private set; }
         public DateTime? StartTime { get; private set; }
 
-        //===============================================================================================[]
-        #endregion
-
-
-
-
-        #region Pub
-        //===============================================================================================[]
         public void SetPeriod( TimeSpan period )
         {
             _period = period;
         }
 
+        //-------------------------------------------------------------------------------------[]
         public virtual void Start( TimeSpan? dueTime = null )
         {
             StartTime = DateTime.Now;
@@ -56,6 +51,7 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Stuff.Timers
             _timer.Change( NextCallBackTime, _period );
         }
 
+        //-------------------------------------------------------------------------------------[]
         public virtual void Pause()
         {
             StartTime = null;
