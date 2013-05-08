@@ -1,7 +1,8 @@
 ﻿// Sergey Kirichenkov [kirichenkov.sa@gmail.com]
-// 2013.05.08 23:46
+// 2013.05.08 23:47
 
 using System;
+using System.Threading;
 
 namespace SBeep.Private.Useful.Cuckoo.Common.Pub.Interfaces.Timers
 {
@@ -10,7 +11,8 @@ namespace SBeep.Private.Useful.Cuckoo.Common.Pub.Interfaces.Timers
         TimeSpan NextCallBackTime { get; }
         DateTime? StartTime { get; }
 
-        void SetPeriod( TimeSpan period );
+        IManualTimer SetCallback(TimerCallback callback);
+        IManualTimer SetPeriod(TimeSpan period);
         void Start( TimeSpan? dueTime = null );
         void Pause();
     }

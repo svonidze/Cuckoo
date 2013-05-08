@@ -2,6 +2,7 @@
 // 2013.05.08 23:28
 
 using System;
+using System.Threading;
 
 namespace SBeep.Private.Useful.Cuckoo.Common.Pub.Interfaces.Timers
 {
@@ -9,6 +10,6 @@ namespace SBeep.Private.Useful.Cuckoo.Common.Pub.Interfaces.Timers
     {
         ICountingManualTimer SetCounting(
             TimeSpan period,
-            Action action );
+            TimerCallback callback);
     }
 }

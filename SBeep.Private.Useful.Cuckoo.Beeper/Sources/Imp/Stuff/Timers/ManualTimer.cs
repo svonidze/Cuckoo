@@ -1,5 +1,5 @@
 ﻿// Sergey Kirichenkov [kirichenkov.sa@gmail.com]
-// 2013.05.08 23:27
+// 2013.05.09 0:09
 
 using System;
 using System.Threading;
@@ -10,21 +10,9 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Stuff.Timers
 {
     internal class ManualTimer : IManualTimer
     {
-        public ManualTimer( Action<object> callBack )
-        {
-            _timer = new Timer(
-                x => {
-                    NextCallBackTime = _period;
-                    callBack( x );
-                } );
-        }
-
-
-
-
         #region Data
         //===============================================================================================[]
-        private readonly Timer _timer;
+        private Timer _timer;
         private TimeSpan _period = TimeSpan.Zero;
 
         //===============================================================================================[]
@@ -38,9 +26,20 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Stuff.Timers
         public TimeSpan NextCallBackTime { get; private set; }
         public DateTime? StartTime { get; private set; }
 
-        public void SetPeriod( TimeSpan period )
+        public IManualTimer SetCallback( TimerCallback callback )
+        {
+            _timer = new Timer(
+                x => {
+                    NextCallBackTime = _period;
+                    callback( x );
+                } );
+            return this;
+        }
+
+        public IManualTimer SetPeriod( TimeSpan period )
         {
             _period = period;
+            return this;
         }
 
         //-------------------------------------------------------------------------------------[]
@@ -55,7 +54,7 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Stuff.Timers
         public virtual void Pause()
         {
             StartTime = null;
-            _timer.Change( TimeSpan.FromHours( 1 ), TimeSpan.FromHours( 1 ) );
+            _timer.Change( TimeSpan.FromDays( 1 ), TimeSpan.FromDays( 1 ) );
         }
 
         //===============================================================================================[]
