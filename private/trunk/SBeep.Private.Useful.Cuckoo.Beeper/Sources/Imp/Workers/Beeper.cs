@@ -43,6 +43,10 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Workers
             _workTimer.Start( Configuration.WorkTime );
 
             Console.ReadLine();
+
+            _workTimer.Pause();
+            _restTimer.Pause();
+
             Go();
         }
 
@@ -63,7 +67,7 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Workers
         #region Routines
         //===============================================================================================[]
         private static void Counting(
-            string message,
+            string actionName,
             DateTime? startTime,
             TimeSpan operationTime )
         {
@@ -73,7 +77,7 @@ namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Workers
                 return;
             }
             var remainingTime = operationTime - ( DateTime.Now - startTime );
-            Console.WriteLine( "Time left {1} before {0}", message, remainingTime.Value.ToString( @"dd\.hh\:mm\:ss" ) );
+            Console.WriteLine( "Time left {1} until the end of '{0}'", actionName, remainingTime.Value.ToString( @"dd\.hh\:mm\:ss" ) );
         }
 
         //-------------------------------------------------------------------------------------[]
