@@ -54,7 +54,7 @@
     <Compile Include="Sources\Pub\Types\Configuration.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Sources\configuration.config">
+    <None Include="configuration.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </None>
