@@ -1,54 +1,53 @@
-﻿// Sergey Kirichenkov [kirichenkov.sa@gmail.com]
-
-using System.IO;
-using System.Xml;
-using System.Xml.Serialization;
-
-namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Stuff.Help
+﻿namespace SBeep.Private.Useful.Cuckoo.Beeper.Imp.Stuff.Help
 {
-    public class ConfigurationSerializer< T >
+    using System.IO;
+    using System.Xml;
+    using System.Xml.Serialization;
+
+    public class ConfigurationSerializer<T>
     {
         private readonly XmlSerializer _serializer;
+
         private readonly XmlSerializerNamespaces _namespaces;
 
         public ConfigurationSerializer()
         {
-            _serializer = new XmlSerializer( typeof( T ) );
-            _namespaces = CreateEmptyNamespaces();
-
+            this._serializer = new XmlSerializer(typeof(T));
+            this._namespaces = CreateEmptyNamespaces();
         }
 
-        public T Deserialize( string input )
+        public T Deserialize(string input)
         {
-            var result = ( T ) _serializer.Deserialize( new StringReader( input ) );
+            var result = (T)this._serializer.Deserialize(new StringReader(input));
             return result;
         }
 
-        //-------------------------------------------------------------------------------------[]
-        public string Serialize( T input )
+        public string Serialize(T input)
         {
-            using( var writer = new StringWriter() )
-            using( var xmlWriter = CreateXmlWriter( writer ) ) {
-                _serializer.Serialize(xmlWriter, input, _namespaces);
+            using (var writer = new StringWriter())
+            using (XmlWriter xmlWriter = CreateXmlWriter(writer))
+            {
+                this._serializer.Serialize(xmlWriter, input, this._namespaces);
                 return writer.ToString();
             }
         }
 
-        private static XmlWriter CreateXmlWriter( TextWriter writer )
+        private static XmlWriter CreateXmlWriter(TextWriter writer)
         {
             var settings = new XmlWriterSettings
-            {
-                Indent = false,
-                NamespaceHandling = NamespaceHandling.OmitDuplicates,
-                OmitXmlDeclaration = true,
-            };
-            return XmlWriter.Create( writer, settings );
+                               {
+                                   Indent = false, 
+                                   NamespaceHandling = NamespaceHandling.OmitDuplicates, 
+                                   OmitXmlDeclaration = true, 
+                               };
+            return XmlWriter.Create(writer, settings);
         }
 
         private static XmlSerializerNamespaces CreateEmptyNamespaces()
         {
             var ns = new XmlSerializerNamespaces(new[] { new XmlQualifiedName() });
-            //ns.Add( "", "" );
+
+            // ns.Add( "", "" );
             return ns;
         }
     }
