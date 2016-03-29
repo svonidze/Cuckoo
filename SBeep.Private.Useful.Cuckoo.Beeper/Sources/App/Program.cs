@@ -2,10 +2,8 @@
 {
     using System;
 
-    using SBeep.Private.Useful.Cuckoo.Beeper.Common.Pub.Requirements;
     using SBeep.Private.Useful.Cuckoo.Beeper.Imp.Stuff.Help;
     using SBeep.Private.Useful.Cuckoo.Beeper.Imp.Stuff.Timers;
-    using SBeep.Private.Useful.Cuckoo.Beeper.Imp.Types;
     using SBeep.Private.Useful.Cuckoo.Beeper.Imp.Workers;
     using SBeep.Private.Useful.Cuckoo.Beeper.Pub.Types;
 
@@ -21,14 +19,13 @@
         private static void Main(string[] args)
         {
             Configuration config = ReadConfig();
-            IBeeperRequirements requirements = new BeeperRequirements
-                                                   {
-                                                       RestTime = config.RestTime, 
-                                                       WorkTime = config.WorkTime
-                                                   };
             try
             {
-                var beeper = new Beeper(requirements, new CountingManualTimer(), new CountingManualTimer());
+                var beeper = new Beeper(
+                    requirements: config,
+                    beepRequirements: config.BeepConfiguration,
+                    workTimer: new CountingManualTimer(),
+                    restTimer: new CountingManualTimer());
                 beeper.Go();
             }
             catch (Exception e)

@@ -36,7 +36,7 @@
         {
             var settings = new XmlWriterSettings
                                {
-                                   Indent = false, 
+                                   Indent = true, 
                                    NamespaceHandling = NamespaceHandling.OmitDuplicates, 
                                    OmitXmlDeclaration = true, 
                                };

@@ -3,33 +3,47 @@
     using System;
     using System.Xml.Serialization;
 
+    using SBeep.Private.Useful.Cuckoo.Beeper.Common.Sources.Pub.Requirements;
+    using SBeep.Private.Useful.Cuckoo.Common.Types;
+
     [Serializable]
-    public class Configuration
+    public class Configuration : IBeeperRequirements
     {
-        private TimeSpan? _workTime;
-
-        private TimeSpan? _restTime;
-
-        [XmlAttribute("workPeriod")]
-        public string WorkSeconds { get; set; }
-
-        [XmlAttribute("restPeriod")]
-        public string RestSeconds { get; set; }
-
+        [XmlIgnore]
         public TimeSpan WorkTime
         {
             get
             {
-                return (this._workTime ?? (this._workTime = TimeSpan.Parse(this.WorkSeconds))).Value;
+                return this.WorkTimeSeriazable;
+            }
+
+            set
+            {
+                this.WorkTimeSeriazable = value;
             }
         }
 
+        [XmlIgnore]
         public TimeSpan RestTime
         {
             get
             {
-                return (this._restTime ?? (this._restTime = TimeSpan.Parse(this.RestSeconds))).Value;
+                return this.RestTimeSeriazable;
+            }
+
+            set
+            {
+                this.RestTimeSeriazable = value;
             }
         }
+
+        [XmlElement("Beep")]
+        public BeepConfiguration BeepConfiguration { get; set; }
+
+        [XmlElement("WorkTime")]
+        public TimeSpanSeriazable WorkTimeSeriazable { get; set; }
+
+        [XmlElement("RestTime")]
+        public TimeSpanSeriazable RestTimeSeriazable { get; set; }
     }
 }

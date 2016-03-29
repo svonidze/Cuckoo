@@ -1,4 +1,4 @@
-﻿namespace SBeep.Private.Useful.Cuckoo.Beeper.Common.Pub.Requirements
+﻿namespace SBeep.Private.Useful.Cuckoo.Beeper.Common.Sources.Pub.Requirements
 {
     using System;
 

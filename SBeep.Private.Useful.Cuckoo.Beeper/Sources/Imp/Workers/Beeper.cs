@@ -3,20 +3,27 @@
     using System;
     using System.Threading.Tasks;
 
-    using SBeep.Private.Useful.Cuckoo.Beeper.Common.Pub.Requirements;
+    using SBeep.Private.Useful.Cuckoo.Beeper.Common.Sources.Pub.Requirements;
     using SBeep.Private.Useful.Cuckoo.Common;
 
     internal class Beeper
     {
         private readonly IBeeperRequirements requirements;
 
+        private readonly IBeepRequirements beepRequirements;
+
         private readonly ICountingManualTimer workTimer;
 
         private readonly ICountingManualTimer restTimer;
 
-        public Beeper(IBeeperRequirements requirements, ICountingManualTimer workTimer, ICountingManualTimer restTimer)
+        public Beeper(
+            IBeeperRequirements requirements,
+            IBeepRequirements beepRequirements,
+            ICountingManualTimer workTimer,
+            ICountingManualTimer restTimer)
         {
             this.requirements = requirements;
+            this.beepRequirements = beepRequirements;
             this.workTimer = workTimer;
             this.restTimer = restTimer;
 
@@ -64,11 +71,11 @@
                 x => Counting(actionName, timer.StartTime, timer.NextCallBackTime));
         }
 
-        private static void Beep()
+        private void Beep()
         {
-            for (int i = 1; i < 5; i++)
+            for (int i = 1; i < this.beepRequirements.Number; i++)
             {
-                Console.Beep(i * 100, 1000);
+                Console.Beep(i * this.beepRequirements.Frequency, (int)this.beepRequirements.Duration.TotalMilliseconds);
             }
         }
 
