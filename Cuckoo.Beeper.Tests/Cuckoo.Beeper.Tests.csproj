@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="nunit" Version="3.11.0" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.2-preview-20190502-01" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Cuckoo.Beeper.Common\Cuckoo.Beeper.Common.csproj" />
+      <ProjectReference Include="..\Cuckoo.Beeper\Cuckoo.Beeper.csproj" />
+      <ProjectReference Include="..\Cuckoo.Common\Cuckoo.Common.csproj" />
+    </ItemGroup>
+
+</Project>
